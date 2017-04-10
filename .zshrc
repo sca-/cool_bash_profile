@@ -67,8 +67,18 @@ getWeather (){
 	echo "$WEATHERCHAR"
 }
 
-PROMPT="$PROMPT $FG[080]\$(getWeather)
+TRAFFICFILE=~/.TRAFFIC.vars
+getTraffic (){
+    if [ -r ${TRAFFICFILE} ]; then
+      source ${TRAFFICFILE}
+    fi
+    echo "$TRAFFICCHAR"
+}
+
+PROMPT="$PROMPT $FG[080]\$(getWeather) \$(getTraffic)
 $FG[255]→  "
+RPROMPT="$FG[240] Node $(node -v)$FG[255] $RPROMPT"
+
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
 
