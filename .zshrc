@@ -53,7 +53,7 @@ plugins=(git)
 
 # User configuration
 
-  export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/semenov/Documents/phpStorm/bin:$HOME/.bin:$HOME/.npm-global/bin"
+  export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/semenov/Documents/phpStorm/bin:/usr/local/mysql/bin:$HOME/.bin:$HOME/.npm-global/bin:$HOME/Library/Python/3.7/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -75,9 +75,22 @@ getTraffic (){
     echo "$TRAFFICCHAR"
 }
 
-PROMPT="$PROMPT $FG[080]\$(getWeather) \$(getTraffic)
+getRprompt (){
+    # RPROMPT="%{$fg_bold[red]%}r: $RPROMPT"
+    if [ -z "$VIRTUAL_ENV" ]; then
+        MYRPROMPT="p: $(python --version | sed 's/[^0-9.]*//g')"
+    else
+        # PIPENVSHELL="$(echo $VIRTUAL_ENV | sed 's/.*\///')"
+        # RPROMPT="pipenv $PIPENVSHELL %{$fg_bold[red]%}ruby: $RPROMPT"
+        MYRPROMPT="p: env ↵ "
+    fi
+    echo "$FG[240] n: $(node -v)$FG[255] $MYRPROMPT"
+}
+
+
+PROMPT="$PROMPT $FG[080] \$(getWeather) \$(getTraffic)
 $FG[255]→  "
-RPROMPT="$FG[240] Node $(node -v)$FG[255] $RPROMPT"
+RPROMPT="\$(getRprompt)"
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
@@ -114,6 +127,8 @@ alias more='less'
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 ## ALIAS
+ alias tru="~/tools/trans -b :ru"
+ alias ten="~/tools/trans -b :en"
  alias h="perl -lne 'm#: (\d+):\d+;(.+)# && printf \"%s :: %s\n\",scalar localtime \$1,\$2' \$HISTFILE"
  alias htoday="h | grep \"\$(LANG=en_us date +\"%a %b %_d\")\""
  alias hyest="h | grep \"\$(LANG=en_us date -v-1d +\"%a %b %_d\")\""
@@ -134,13 +149,15 @@ alias more='less'
  alias cssdiff="git diff www/css2"
  alias jsdiff="git diff www/js4/src/app"
  alias gs="git status"
+ alias gds="git diff --staged"
+ alias gph="git pull origin $(git rev-parse --abbrev-ref HEAD)"
 # project tutu
  alias pullscripts="scp -r semenov@semenov.tutu.pro:/home/semenov/devel/projects/tutu/www/scripts/build /home/semenov/tutu/www/scripts"
  function rjs () { grunt rjs:app/avia/require/"$@" }
  function abless() { grunt less-file:www/css2/ab/"$@" }
  function bless() { grunt less-file:www/css2/bemp/page/avia/"$@" }
 
-eval $(thefuck --alias)
+# eval $(thefuck --alias)
 
 # toggle iTerm Dock icon
 # add this to your .bash_profile or .zshrc
@@ -168,3 +185,15 @@ function toggleiTerm() {
     done
 }
 
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+source ~/.oc_completion
