@@ -1,0 +1,11 @@
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+	type = cat-file -t
+	dump = cat-file -p
+	pom = pull origin master
+	poh = push origin HEAD
+	puh = !sh -c 'git pull origin $(git branch --show-current)'
